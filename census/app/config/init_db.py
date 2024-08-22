@@ -2,9 +2,11 @@ import os
 
 from sqlmodel import create_engine, SQLModel, Session
 
-from model.models import Model
+from census.app.model.models import Model
 
-DATABASE_URL = os.environ.get("DATASOURCE_URL")
+
+# DATABASE_URL = os.environ.get("DATASOURCE_URL")
+DATABASE_URL = "postgresql+pg8000://postgres:postgres@123/census"
 print(DATABASE_URL)
 engine = create_engine(DATABASE_URL, echo=True)
 Model.metadata.create_all(engine)

@@ -3,10 +3,10 @@ from typing import List
 
 import uuid
 
-from depends import get_camera_service
-from dto.camera import CameraOut, CameraCreate, StatusesUpdate
-from model import Camera
-from services import CameraService
+from census.app.depends import get_camera_service
+from census.app.dto.camera import CameraOut, CameraCreate, StatusesUpdate
+from census.app.model import Camera
+from census.app.services import CameraService
 
 
 router = APIRouter(prefix="/cameras")

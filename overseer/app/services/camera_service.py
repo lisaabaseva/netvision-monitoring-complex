@@ -2,9 +2,9 @@ from typing import Any
 
 import requests, json
 
-from config import CENSUS_URL
+from overseer.app.config import CENSUS_URL
 
-from shared.camera_status_codes import CameraStatus
+from overseer.app.shared.camera_status_codes import CameraStatus
 
 
 def get_camera_list() -> Any:

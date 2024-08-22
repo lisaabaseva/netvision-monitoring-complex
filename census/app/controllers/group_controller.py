@@ -3,10 +3,10 @@ from typing import List
 
 import uuid
 
-from depends import get_group_service
-from model import Group
-from dto.group import GroupOut, GroupCreate
-from services import GroupService
+from census.app.depends import get_group_service
+from census.app.model import Group
+from census.app.dto.group import GroupOut, GroupCreate
+from census.app.services import GroupService
 
 router = APIRouter(prefix="/groups")
 

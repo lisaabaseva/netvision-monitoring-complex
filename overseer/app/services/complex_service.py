@@ -2,9 +2,9 @@ from typing import List
 
 import requests
 
-from dto.request import CameraIn
-from exception import CensusUnavailable
-from config import CENSUS_URL
+from overseer.app.dto.camera import CameraIn, CameraStatusOut
+from overseer.app.exeption import CensusUnavailable
+from overseer.app.config import CENSUS_URL
 
 
 def get_complex_list() -> List[CameraIn]:
