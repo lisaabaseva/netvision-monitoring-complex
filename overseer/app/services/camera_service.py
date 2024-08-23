@@ -2,20 +2,20 @@ from typing import Any, List
 
 import requests, json
 
-from overseer.app.config import CENSUS_URL, CAMERA_CHECK_PROTOCOL
+from config import CENSUS_URL, CAMERA_CHECK_PROTOCOL
 
-from overseer.app.shared.camera_status_codes import CameraStatus
+from shared.camera_status_codes import CameraStatus
 
-from overseer.app.dto.camera import CameraStatusDto, CameraDto
+from dto.camera import CameraStatusDto, CameraDto
 
-from overseer.app.exeption import CensusUnavailable
-from overseer.app.config import CENSUS_URL, CAMERA_CHECK_TIMEOUT
-from overseer.app.config.overseer_log_config import get_default_logger
+from exeption import CensusUnavailable
+from config import CENSUS_URL, CAMERA_CHECK_TIMEOUT
+from config.overseer_log_config import get_default_logger
 
 logger = get_default_logger()
 
 
-def authentication(complex_ip, login, password) -> Any:
+def authentication(complex_ip: str, login: str, password: str) -> Any:
     logger.info("Sending auth request to the address: " + "http://" + complex_ip + "/api/v1/auth")
     auth_response = requests.post("http://" + complex_ip + "/api/v1/auth",
                                   timeout=3, data=json.dumps({"login": login, "password": password}),
@@ -41,7 +41,7 @@ def check_camera_status(camera_ip, camera_id, access_token) -> Any:
 
 def get_cameras_info(complex_ip, login, password) -> List[CameraDto]:
     result = []
-
+    
     access_token = authentication(complex_ip, login, password)
     response = requests.get("http://" + complex_ip + "/api/v1/cameras",
                             timeout=CAMERA_CHECK_TIMEOUT,
