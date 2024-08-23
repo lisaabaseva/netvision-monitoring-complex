@@ -15,13 +15,13 @@ class ComplexRepository:
         session: Session = next(get_session())
         result = session.scalars(select(Complex)).all()
         session.close()
-        return [Complex(uuid=camera.uuid,
-                        name=camera.name,
-                        ip=camera.ip,
-                        port=camera.port,
-                        login=camera.login,
-                        password=camera.password,
-                        group_uuid=camera.group_uuid) for camera in result]
+        return [Complex(uuid=complex.uuid,
+                        name=complex.name,
+                        ip=complex.ip,
+                        port=complex.port,
+                        login=complex.login,
+                        password=complex.password,
+                        group_uuid=complex.group_uuid) for complex in result]
 
     def get_complex_by_id(self, complex_id: uuid.UUID) -> Complex:
         session: Session = next(get_session())
@@ -36,7 +36,6 @@ class ComplexRepository:
         session.commit()
         session.refresh(complex_create)
         session.close()
-
         return complex_create
 
     def delete_complex_by_id(self, complex_id: uuid.UUID) -> bool:

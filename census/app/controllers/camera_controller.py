@@ -4,7 +4,7 @@ from typing import List
 import uuid
 
 from census.app.depends import get_camera_service
-from census.app.dto.camera import CameraOut, CameraCreate, StatusesUpdate
+from census.app.dto.camera import CameraOut, CameraCreate, CameraStatesUpdate
 from census.app.model import Camera
 from census.app.services import CameraService
 
@@ -36,5 +36,5 @@ router_statuses = APIRouter(prefix="/statuses")
 
 
 @router_statuses.post("/")
-async def update_statuses(cameras_to_statuses: List[StatusesUpdate], service: CameraService = Depends(get_camera_service)) -> None:
-    return service.update_cameras_statuses(cameras_to_statuses)
+async def update_statuses(cameras_to_statuses: List[CameraStatesUpdate], service: CameraService = Depends(get_camera_service)) -> None:
+    return service.update_cameras_states(cameras_to_statuses)

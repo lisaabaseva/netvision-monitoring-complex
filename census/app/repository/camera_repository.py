@@ -7,7 +7,7 @@ from sqlmodel import select
 from sqlmodel import Session
 
 from census.app.model.camera import Camera
-from census.app.dto.camera import StatusesUpdate
+from census.app.dto.camera import CameraStatesUpdate
 from census.app.config.init_db import get_session
 
 
@@ -24,11 +24,13 @@ class CameraRepository:
                        status=camera.status,
                        complex_uuid=camera.complex_uuid) for camera in result]
 
+
     def get_camera_by_id(self, camera_id: uuid.UUID) -> Camera:
         session: Session = next(get_session())
         result = session.get(Camera, camera_id)
         session.close()
         return result
+
 
     def create_camera(self, camera_create: Camera) -> Camera:
         session: Session = next(get_session())
@@ -43,8 +45,8 @@ class CameraRepository:
         session.commit()
         session.refresh(new_camera)
         session.close()
-
         return new_camera
+
 
     def delete_camera_by_id(self, camera_id: uuid.UUID) -> bool:
         session: Session = next(get_session())
@@ -58,10 +60,19 @@ class CameraRepository:
         session.close()
         return True
 
-    def update_cameras_statuses(self, cameras_to_statuses: List[StatusesUpdate]) -> None:
+
+    def update_cameras_states(self, updated_states: List[CameraStatesUpdate]) -> None:
         session: Session = next(get_session())
-        for pair in cameras_to_statuses:
-            camera = session.get(Camera, pair.uuid)
-            camera.status = pair.status
+        for data in updated_states:
+            camera = session.get(Camera, data.uuid)
+            camera.status = data.status
+            camera.active = data.active
             session.commit()
         session.close()
+        
+    
+    def get_cameras_id(self) -> List[int]:
+        session: Session = next(get_session())
+        result = session.scalars(select(Camera)).all()
+        session.close()
+        return [camera.id for camera in result]

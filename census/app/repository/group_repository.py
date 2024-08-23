@@ -25,7 +25,6 @@ class GroupRepository:
         session.commit()
         session.refresh(group_create)
         session.close()
-
         return group_create
 
     def delete_group_by_id(self, group_id: uuid.UUID) -> bool:

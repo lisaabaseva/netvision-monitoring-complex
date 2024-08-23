@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-class StatusesUpdate(BaseModel):
+class CameraStatesUpdate(BaseModel):
     uuid: UUID
     status: int
     active: bool
