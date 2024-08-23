@@ -1,2 +1,2 @@
-from .camera_create_update_dto import CameraStatusOut
-from .camera_dto import CameraIn
+from .camera_status_dto import CameraStatusDto
+from .camera_dto import CameraDto

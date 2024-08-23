@@ -1,12 +1,13 @@
 import uuid, requests, json
 from typing import List
 
-from data import ComplexRepository
-from dto.request import ComplexCreate, CameraCreate
-from model import Complex, Camera
-from service import CameraService
+from census.app.repository import ComplexRepository
+from census.app.dto.camera import CameraCreate
+from census.app.dto.complex import ComplexCreate
+from census.app.model import Complex, Camera
+from census.app.services import CameraService
 
-from config.log_config import get_default_logger
+from census.app.config.census_log_config import get_default_logger
 
 
 class ComplexService:

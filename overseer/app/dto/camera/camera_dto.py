@@ -2,9 +2,11 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-class CameraIn(BaseModel):
-    uuid: UUID
+# Здесь был CameraIn. Используется в overseer/app/service/complex.py
+class CameraDto(BaseModel):
+    id: int
+    description: str
     ip: str
-    port: int
+    active: bool
     status: int
-    group_uuid: UUID
+
