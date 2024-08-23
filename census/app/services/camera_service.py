@@ -3,14 +3,17 @@ from typing import List
 import requests
 
 from census.app.config.census_consts import OVERSEER_URL
+from census.app.exceptions.unavailable_service import UnavailableService
+from census.app.services.complex_service import ComplexService
 from repository import CameraRepository
 from dto.camera import CameraStatesUpdate, CameraCreate
 from model import Camera
 
 
 class CameraService:
-    def __init__(self, camera_repository: CameraRepository):
+    def __init__(self, camera_repository: CameraRepository, complex_service: ComplexService):
         self.camera_repository = camera_repository
+        self.complex_service = complex_service
 
 
     def get_cameras(self) -> List[Camera]:
@@ -33,16 +36,21 @@ class CameraService:
     def delete_camera_by_id(self, camera_id: uuid.UUID) -> bool:
         return self.camera_repository.delete_camera_by_id(camera_id)
 
-    
-    def __get_cameras_id(self) -> List[int]:
-        return self.camera_repository.get_cameras_id()
-    
-    def update_cameras_states(self) -> None:
-        response = requests.get(OVERSEER_URL + "/cameras/")
+        
+    def update_cameras_states(self, complex_ip, login, password: str) -> None:
+        url = OVERSEER_URL + "/states/" 
+        headers = {
+            "ip-complex": complex_ip,
+            "login": login,
+            "password": password
+        } 
+        response = requests.get(url, headers=headers)
 
         if response.status_code != 200:
-            raise CensusUnavailable("Couldn't send camera list request to the census server")
+            raise UnavailableService("Couldn't get cameras states from overseer server")
+        
+        complex = self.complex_service.get_complex_by_ip(complex_ip)
 
-        return response.json()
-        return self.camera_repository.update_cameras_statuses(cameras_to_statuses)
-    
+        cameras_states: CameraStatesUpdate = response.json()
+        return self.camera_repository.update_cameras_states(complex.uuid, cameras_states)
+            

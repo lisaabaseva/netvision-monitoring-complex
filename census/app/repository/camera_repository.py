@@ -61,10 +61,10 @@ class CameraRepository:
         return True
 
 
-    def update_cameras_states(self, updated_states: List[CameraStatesUpdate]) -> None:
+    def update_cameras_states(self, complex_uuid: uuid, updated_states: List[CameraStatesUpdate]) -> None:
         session: Session = next(get_session())
         for data in updated_states:
-            camera = session.get(Camera, data.uuid)
+            camera = session.scalars(select(Camera).where(Camera.complex_uuid == complex_uuid).where(Camera.id == data.camera_id))
             camera.status = data.status
             camera.active = data.active
             session.commit()
