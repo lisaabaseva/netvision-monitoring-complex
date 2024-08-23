@@ -65,6 +65,9 @@ class CameraRepository:
         session: Session = next(get_session())
         for data in updated_states:
             camera = session.scalars(select(Camera).where(Camera.complex_uuid == complex_uuid).where(Camera.id == data.camera_id))
+            if camera is None:
+                continue
+            
             camera.status = data.status
             camera.active = data.active
             session.commit()

@@ -37,7 +37,7 @@ class CameraService:
         return self.camera_repository.delete_camera_by_id(camera_id)
 
         
-    def update_cameras_states(self, complex_ip, login, password: str) -> None:
+    def update_cameras_states(self, complex_ip: str, login: str, password: str) -> None:
         url = OVERSEER_URL + "/states/" 
         headers = {
             "ip-complex": complex_ip,
@@ -51,6 +51,23 @@ class CameraService:
         
         complex = self.complex_service.get_complex_by_ip(complex_ip)
 
-        cameras_states: CameraStatesUpdate = response.json()
+        cameras_states: List[CameraStatesUpdate] = response.json()
         return self.camera_repository.update_cameras_states(complex.uuid, cameras_states)
+    
+    
+    def get_cameras_info(self, complex_ip: str, login: str, password: str) -> None:
+        url = OVERSEER_URL + "/cameras/" 
+        headers = {
+            "ip-complex": complex_ip,
+            "login": login,
+            "password": password
+        } 
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code != 200:
+            raise UnavailableService("Couldn't get cameras states from overseer server")
+        
+        for camera in response.json:
+            self.camera_repository.create_camera(camera)    
+        
             
