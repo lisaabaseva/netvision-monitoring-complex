@@ -15,19 +15,22 @@ from config.overseer_log_config import get_default_logger
 logger = get_default_logger()
 
 
-def authentication(complex_ip: str, login: str, password: str) -> Any:
-    logger.info("Sending auth request to the address: " + "http://" + complex_ip + "/api/v1/auth")
-    auth_response = requests.post("http://" + complex_ip + "/api/v1/auth",
+def authentification(complex_ip: str, complex_port: str, login: str, password: str) -> Any:
+    logger.info("Sending auth request to the address: " + "http://" + complex_ip + ":" + complex_port + "/api/v1/auth")
+    auth_response = requests.post("http://" + complex_ip + ":" + complex_port + "/api/v1/auth",
                                   timeout=3, data=json.dumps({"login": login, "password": password}),
                                   headers={"Content-Type": "application/json"})
+    
+    if auth_response.status_code != 200:
+        raise CensusUnavailable("Authentification error")
     logger.info("Auth response: " + str(auth_response.status_code) + " : " + auth_response.text)
     access_token = auth_response.json()["access_token"]
     return access_token
 
 
-def check_camera_status(camera_ip, camera_id, access_token) -> Any:
+def check_camera_status(camera_ip: str, camera_id: str, access_token: str) -> Any:
     logger.info(
-        "Sending camera checking request to the address: " + CAMERA_CHECK_PROTOCOL + url + "/stream/recognition/" + str(
+        "Sending camera checking request to the address: " + CAMERA_CHECK_PROTOCOL + camera_ip + "/stream/recognition/" + str(
             camera_id) + "/snapshot")
     resp = requests.get(CAMERA_CHECK_PROTOCOL + camera_ip + "/stream/recognition/" + str(camera_id) + "/snapshot",
                         timeout=CAMERA_CHECK_TIMEOUT,
@@ -39,11 +42,11 @@ def check_camera_status(camera_ip, camera_id, access_token) -> Any:
     return CameraStatus.BAD.value
 
 
-def get_cameras_info(complex_ip, login, password) -> List[CameraDto]:
+def get_cameras_info(complex_ip: str, complex_port: str, login: str, password: str) -> Any:
     result = []
     
-    access_token = authentication(complex_ip, login, password)
-    response = requests.get("http://" + complex_ip + "/api/v1/cameras",
+    access_token = authentification(complex_ip, complex_port, login, password)
+    response = requests.get("http://" + complex_ip + ":" + complex_port + "/api/v1/cameras",
                             timeout=CAMERA_CHECK_TIMEOUT,
                             headers={"access-token": access_token, "Content-Type": "application/json"})
 
@@ -66,11 +69,11 @@ def get_cameras_info(complex_ip, login, password) -> List[CameraDto]:
     return result
 
 
-def get_cameras_state(complex_ip, login, password):
+def get_cameras_state(complex_ip: str, complex_port: str, login: str, password: str) -> Any:
     result = []
 
-    access_token = authentication(complex_ip, login, password)
-    response = requests.get("http://" + complex_ip + "/api/v1/cameras",
+    access_token = authentification(complex_ip, complex_port, login, password)
+    response = requests.get("http://" + complex_ip + ":" + complex_port + "/api/v1/cameras",
                             timeout=CAMERA_CHECK_TIMEOUT,
                             headers={"access-token": access_token, "Content-Type": "application/json"})
 
@@ -90,57 +93,6 @@ def get_cameras_state(complex_ip, login, password):
             camera["status"] = camera_status
             del camera["ip"]
 
-    return result
-
-
-def __get_complexes_to_cameras_map(cameras_response):  # Это пиздец, но я устал. Мне можно. Потом переделаю
-    result = {}
-    for camera in cameras_response:
-        if not camera["complex_uuid"] in result.keys():
-            result[camera["complex_uuid"]] = []
-
-        result[camera["complex_uuid"]].append((camera["uuid"], camera["id"]))
-
-    return result
-
-
-def __find_complex_data(complexes_response, uuid):
-    for complex in complexes_response:
-        if complex["uuid"] == str(uuid):
-            return complex["ip"] + ":" + str(complex["port"]), complex["login"], complex["password"]
-
-
-def get_statuses(cameras_response, complexes_response) -> List[CameraStatusDto]:
-    result = list()
-
-    complexes_to_cameras = __get_complexes_to_cameras_map(cameras_response)
-    for complex_uuid, cameras_data_list in complexes_to_cameras.items():
-        url, login, password = __find_complex_data(complexes_response, complex_uuid)
-        logger.info("Trying to auth using url: " + url)
-        try:
-            access_token = authentication(url, login, password)
-        except Exception as err:
-            logger.warning("Couldn't authorize using this url: " + "http://" + url + "/api/v1/auth")
-            logger.warning("The error message: " + str(err))
-            continue
-        for data in cameras_data_list:
-            try:
-                camera_status = check_camera_status(url, data[1], access_token)
-
-                camera_to_status: CameraStatusDto = CameraStatusDto(uuid=data[0],
-                                                                    id=data[1],
-                                                                    status=camera_status)
-                logger.info("Connected successfully to the " + url + " - " + str(data[1]))
-
-            except Exception as err:
-                logger.warning(
-                    "Couldn't connect to the " + url + " - " + str(data[1]) + " due to exception: " + str(err))
-                camera_to_status: CameraStatusDto = CameraStatusDto(uuid=data[0],
-                                                                    id=data[1],
-                                                                    status=camera_status)
-            result.append(camera_to_status)
-
-    logger.info(result)
     return result
 
 
