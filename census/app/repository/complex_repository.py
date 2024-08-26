@@ -5,9 +5,9 @@ from typing import List
 from sqlmodel import select
 from sqlmodel import Session
 
-from census.app.dto.complex import ComplexCreate
-from census.app.model import Complex
-from census.app.config.init_db import get_session
+from dto.complex import ComplexCreate
+from model import Complex
+from config.init_db import get_session
 
 
 class ComplexRepository:

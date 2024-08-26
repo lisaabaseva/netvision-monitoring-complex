@@ -2,9 +2,9 @@ import uuid
 from typing import List
 import requests
 
-from census.app.config.census_consts import OVERSEER_URL
-from census.app.exceptions.unavailable_service import UnavailableService
-from census.app.services.complex_service import ComplexService
+from config.census_consts import OVERSEER_URL
+from exceptions.unavailable_service import UnavailableService
+from services.complex_service import ComplexService
 from repository import CameraRepository
 from dto.camera import CameraStatesUpdate, CameraCreate
 from model import Camera
@@ -55,14 +55,15 @@ class CameraService:
         return self.camera_repository.update_cameras_states(complex.uuid, cameras_states)
     
     
-    def get_cameras_info(self, complex_ip: str, login: str, password: str) -> None:
-        url = OVERSEER_URL + "/cameras/" 
-        headers = {
+    def fill_camera_repository(self, complex_ip: str, complex_port: str, login: str, password: str) -> None:
+        url = OVERSEER_URL + "/info/cameras" 
+        params = {
             "ip-complex": complex_ip,
+            "complex-port": complex_port,
             "login": login,
             "password": password
         } 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, params=params)
         
         if response.status_code != 200:
             raise UnavailableService("Couldn't get cameras states from overseer server")

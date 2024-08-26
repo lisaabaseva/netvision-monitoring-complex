@@ -1,14 +1,11 @@
-import uuid, requests, json
+import uuid
 from typing import List
 
-from census.app.repository.complex_repository import ComplexRepository
-from census.app.dto.complex import ComplexCreate
-from census.app.dto.camera import CameraCreate
-from census.app.model.camera import Camera
-from census.app.model.complex import Complex
-from census.app.services import CameraService
+from repository.complex_repository import ComplexRepository
+from dto.complex import ComplexCreate
+from model.complex import Complex
 
-from census.app.config.census_log_config import get_default_logger
+from config.census_log_config import get_default_logger
 
 
 class ComplexService:
@@ -38,7 +35,7 @@ class ComplexService:
                                        group_uuid=complex_create.group_uuid)
         
         return self.complex_repository.create_complex(new_complex)
-
+        
 
     def delete_complex_by_id(self, complex_id: uuid.UUID) -> bool:
         return self.complex_repository.delete_complex_by_id(complex_id)

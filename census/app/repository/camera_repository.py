@@ -6,9 +6,9 @@ from typing import List
 from sqlmodel import select
 from sqlmodel import Session
 
-from census.app.model.camera import Camera
-from census.app.dto.camera import CameraStatesUpdate
-from census.app.config.init_db import get_session
+from model.camera import Camera
+from dto.camera import CameraStatesUpdate
+from config.init_db import get_session
 
 
 class CameraRepository:

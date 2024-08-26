@@ -1,4 +1,6 @@
-from services import GroupService, ComplexService, CameraService
+from services.camera_service import CameraService
+from services.complex_service import ComplexService
+from services.group_service import GroupService
 from repository import GroupRepository, ComplexRepository, CameraRepository
 
 groupRepository: GroupRepository = GroupRepository()

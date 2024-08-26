@@ -3,10 +3,11 @@ from typing import List
 
 import uuid
 
-from census.app.depends import get_complex_service, get_camera_service
-from census.app.dto.complex import ComplexDetailedOut, ComplexCreate
-from census.app.model import Complex
-from census.app.services import ComplexService, CameraService
+from depends import get_complex_service, get_camera_service
+from dto.complex import ComplexDetailedOut, ComplexCreate
+from model import Complex
+from services.complex_service import ComplexService
+from services.camera_service import CameraService
 
 router = APIRouter(prefix="/complexes")
 
@@ -25,8 +26,8 @@ async def get_complex(complex_id: uuid.UUID, service: ComplexService = Depends(g
 async def create_complex(complex_create: ComplexCreate, service: ComplexService = Depends(get_complex_service),
                          camera_service: CameraService = Depends(get_camera_service)) -> Complex:
     created_complex = service.create_complex(complex_create)
-
-    service.create_cameras_in_complex(created_complex, camera_service)
+    
+    camera_service.fill_camera_repository(created_complex.ip, created_complex.port, created_complex.login, created_complex.password)
 
     return created_complex
 
