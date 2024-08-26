@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config.init_db import init_db
 
-# from controllers.routes import camera, group, complex
+from controllers import camera_controller, complex_controller, group_controller
 #
 # from cron.jobs import scheduler
 
@@ -17,10 +17,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(camera.router)
-# app.include_router(group.router)
-# app.include_router(camera.router_statuses)
-# app.include_router(complex.router)
+app.include_router(camera_controller.router)
+app.include_router(complex_controller.router)
+app.include_router(group_controller.router)
+
 
 
 @app.on_event("startup")
@@ -35,6 +35,6 @@ if __name__ == "__main__":
     #     pass
     # scheduler.start()
 
-    uvicorn.run("main:app", reload=True, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", reload=True, host="localhost", port=8000)
 
 

@@ -6,9 +6,9 @@ from typing import List
 from sqlmodel import select
 from sqlmodel import Session
 
-from census.app.model import Group
-from census.app.dto.group import GroupCreate
-from census.app.config.init_db import get_session
+from model import Group
+from dto.group import GroupCreate
+from config.init_db import get_session
 
 
 class GroupRepository:
@@ -25,7 +25,6 @@ class GroupRepository:
         session.commit()
         session.refresh(group_create)
         session.close()
-
         return group_create
 
     def delete_group_by_id(self, group_id: uuid.UUID) -> bool:
