@@ -1,1 +1,1 @@
-from .census_unvailable import CensusUnavailable
+from .census_unvailable import UnavailableServer

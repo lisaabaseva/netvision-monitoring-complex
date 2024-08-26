@@ -1,3 +1,3 @@
-class CensusUnavailable(Exception):
+class UnavailableServer(Exception):
     def __init__(self, msg):
         super().__init__(msg)
