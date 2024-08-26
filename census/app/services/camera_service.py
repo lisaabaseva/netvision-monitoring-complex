@@ -11,9 +11,8 @@ from model import Camera
 
 
 class CameraService:
-    def __init__(self, camera_repository: CameraRepository, complex_service: ComplexService):
+    def __init__(self, camera_repository: CameraRepository):
         self.camera_repository = camera_repository
-        self.complex_service = complex_service
 
 
     def get_cameras(self) -> List[Camera]:
@@ -29,6 +28,7 @@ class CameraService:
                                     id=camera_create.id,
                                     url=camera_create.url,
                                     active=camera_create.active,
+                                    status=camera_create.status,
                                     complex_uuid=camera_create.complex_uuid)
         return self.camera_repository.create_camera(new_camera)
 
@@ -37,29 +37,30 @@ class CameraService:
         return self.camera_repository.delete_camera_by_id(camera_id)
 
         
-    def update_cameras_states(self, complex_ip: str, login: str, password: str) -> None:
-        url = OVERSEER_URL + "/states/" 
-        headers = {
-            "ip-complex": complex_ip,
+    def update_cameras_states(self, complex_ip: str, complex_port: int, login: str, password: str, complex_uuid: uuid) -> None:
+        url = OVERSEER_URL + "/info/states" 
+        params = {
+            "complex_ip": complex_ip,
+            "complex_port": complex_port,
             "login": login,
             "password": password
         } 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, params=params)
 
         if response.status_code != 200:
             raise UnavailableService("Couldn't get cameras states from overseer server")
         
-        complex = self.complex_service.get_complex_by_ip(complex_ip)
+        # complex = self.complex_service.get_complex_by_ip(complex_ip)
 
         cameras_states: List[CameraStatesUpdate] = response.json()
-        return self.camera_repository.update_cameras_states(complex.uuid, cameras_states)
+        return self.camera_repository.update_cameras_states(complex_uuid, cameras_states)
     
     
-    def fill_camera_repository(self, complex_ip: str, complex_port: str, login: str, password: str) -> None:
+    def fill_camera_repository(self, complex_ip: str, complex_port: str, login: str, password: str, complex_uuid: uuid) -> None:
         url = OVERSEER_URL + "/info/cameras" 
         params = {
-            "ip-complex": complex_ip,
-            "complex-port": complex_port,
+            "complex_ip": complex_ip,
+            "complex_port": complex_port,
             "login": login,
             "password": password
         } 
@@ -67,8 +68,8 @@ class CameraService:
         
         if response.status_code != 200:
             raise UnavailableService("Couldn't get cameras states from overseer server")
-        
-        for camera in response.json:
-            self.camera_repository.create_camera(camera)    
+                
+        for camera in response.json():
+            self.camera_repository.create_camera(camera, complex_uuid)    
         
             

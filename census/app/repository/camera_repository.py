@@ -32,14 +32,14 @@ class CameraRepository:
         return result
 
 
-    def create_camera(self, camera_create: Camera) -> Camera:
+    def create_camera(self, camera_create: Camera, complex_uuid: uuid) -> Camera:
         session: Session = next(get_session())
-        new_camera = Camera(description=camera_create.description,
-                            url=camera_create.url,
-                            id=camera_create.id,
-                            status=camera_create.status,
-                            active=camera_create.active,
-                            complex_uuid=camera_create.complex_uuid)
+        new_camera = Camera(description=camera_create["description"],
+                            url=camera_create["url"],
+                            id=camera_create["id"],
+                            status=camera_create["status"],
+                            active=camera_create["active"],
+                            complex_uuid=complex_uuid)
 
         session.add(new_camera)
         session.commit()
@@ -64,12 +64,12 @@ class CameraRepository:
     def update_cameras_states(self, complex_uuid: uuid, updated_states: List[CameraStatesUpdate]) -> None:
         session: Session = next(get_session())
         for data in updated_states:
-            camera = session.scalars(select(Camera).where(Camera.complex_uuid == complex_uuid).where(Camera.id == data.camera_id))
+            camera = session.scalars(select(Camera).where(Camera.complex_uuid == complex_uuid).where(Camera.id == data["id"])).first()
             if camera is None:
                 continue
-            
-            camera.status = data.status
-            camera.active = data.active
+
+            camera.status = data["status"]
+            camera.active = data["active"]
             session.commit()
         session.close()
         

@@ -6,5 +6,6 @@ class CameraCreate(BaseModel):
     description: str
     url: str
     id: int
+    status: int
     active: bool
     complex_uuid: UUID
