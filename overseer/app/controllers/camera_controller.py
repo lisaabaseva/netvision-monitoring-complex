@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from typing import List
 
 import uuid
-from overseer.app.dto.camera import CameraDto, CameraStatusDto
-from overseer.app.services.camera_service import get_cameras_info, get_cameras_state
+from dto.camera import CameraDto, CameraStatusDto
+from services.camera_service import get_cameras_info, get_cameras_state
 
 router = APIRouter(prefix="/info")
 

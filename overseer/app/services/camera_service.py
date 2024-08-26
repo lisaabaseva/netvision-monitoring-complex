@@ -2,10 +2,10 @@ from typing import Any, List
 
 import requests, json
 
-from overseer.app.config import CAMERA_CHECK_PROTOCOL, CAMERA_CHECK_TIMEOUT
-from overseer.app.config.overseer_log_config import get_default_logger
-from overseer.app.shared.camera_status_codes import CameraStatus
-from overseer.app.exeption import UnavailableServer
+from config import CAMERA_CHECK_PROTOCOL, CAMERA_CHECK_TIMEOUT
+from config.overseer_log_config import get_default_logger
+from shared.camera_status_codes import CameraStatus
+from exeption import UnavailableServer
 
 logger = get_default_logger()
 
@@ -23,21 +23,21 @@ def authentication(complex_ip: str, complex_port: str, login: str, password: str
     return access_token
 
 
-def check_camera_status(camera_ip: str, camera_id: str, access_token: str) -> int:
+def check_camera_status(complex_ip: str, complex_port: str, camera_id: int, access_token: str) -> int:
     logger.info(
-        "Sending camera checking request to the address: " + CAMERA_CHECK_PROTOCOL + camera_ip + "/stream/recognition/" + str(
-            camera_id) + "/snapshot")
+        "Sending camera checking request to the address: " + CAMERA_CHECK_PROTOCOL + complex_ip + ":" + complex_port + "/stream/recognition/" + 
+            str(camera_id) + "/snapshot")
     camera_status = CameraStatus.BAD.value
     try:
-        resp = requests.get(CAMERA_CHECK_PROTOCOL + camera_ip + "/stream/recognition/" + str(camera_id) + "/snapshot",
+        resp = requests.get(CAMERA_CHECK_PROTOCOL + complex_ip + ":" + complex_port + "/stream/recognition/" + str(camera_id) + "/snapshot",
                         timeout=CAMERA_CHECK_TIMEOUT,
                         headers={"access-token": access_token, "Content-Type": "application/json"})
         logger.info("Camera check response: " + str(resp.status_code) + " : " + resp.text)
 
         if resp.status_code == 200:
-            return CameraStatus.OK.value
+            camera_status = CameraStatus.OK.value
     except Exception as err:
-        logger.warning("Couldn't connect to the " + camera_ip + " - " + camera_id + " due to exception: " + str(err))
+        logger.warning("Couldn't connect to the " + complex_ip + " - " + str(camera_id) + " due to exception: " + str(err))
     finally:
         return camera_status
 
@@ -72,15 +72,15 @@ def get_cameras_info(complex_ip: str, complex_port: str, login: str, password: s
 
     for camera in response.json():
         camera_info = {"id": camera["id"],
+                       "url": camera["url"],
                        "description": camera["description"],
-                       "ip": camera["ip"],
                        "active": camera["active"],
                        "status": 0}
         result.append(camera_info)
 
     for camera in result:
         if camera["active"]:
-            camera_status = check_camera_status(camera["ip"], camera["id"], access_token)
+            camera_status = check_camera_status(complex_ip, complex_port, camera["id"], access_token)
             camera["status"] = camera_status
 
     return result
@@ -116,16 +116,14 @@ def get_cameras_state(complex_ip: str, complex_port: str, login: str, password: 
 
     for camera in response.json():
         camera_info = {"id": camera["id"],
-                       "ip": camera["ip"],
                        "active": camera["active"],
                        "status": 0}
         result.append(camera_info)
 
     for camera in result:
         if camera["active"]:
-            camera_status = check_camera_status(camera["ip"], camera["id"], access_token)
+            camera_status = check_camera_status(complex_ip, complex_port, camera["id"], access_token)
             camera["status"] = camera_status
-            del camera["ip"]
 
     return result
 

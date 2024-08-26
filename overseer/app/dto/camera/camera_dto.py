@@ -6,7 +6,7 @@ from uuid import UUID
 class CameraDto(BaseModel):
     id: int
     description: str
-    ip: str
+    url: str
     active: bool
     status: int
 
