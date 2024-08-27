@@ -1,0 +1,1 @@
+from .census_consts import FASTAPI_VERSION, FASTAPI_TITLE

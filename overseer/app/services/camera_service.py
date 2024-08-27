@@ -12,24 +12,28 @@ logger = get_default_logger()
 
 def authentication(complex_ip: str, complex_port: str, login: str, password: str) -> str:
 
-    logger.info("Sending auth request to the address: " + "http://" + complex_ip + ":" + complex_port + "/api/v1/auth")
+    # logger.info("Sending auth request to the address: " + "http://" + complex_ip + ":" + complex_port + "/api/v1/auth")
     auth_response = requests.post("http://" + complex_ip + ":" + complex_port + "/api/v1/auth",
-                                  timeout=AUTHENTICATION_TIMEOUT, data=json.dumps({"login": login, "password": password}),
+                                  timeout=AUTHENTICATION_TIMEOUT, 
+                                  data=json.dumps({"login": login, "password": password}),
                                   headers={"Content-Type": "application/json"})
+    
     if auth_response.status_code != 200:
         raise UnavailableServer("Authentification error")
-    logger.info("Auth response: " + str(auth_response.status_code) + " : " + auth_response.text)
+    
+    # logger.info("Auth response: " + str(auth_response.status_code) + " : " + auth_response.text)
     access_token = auth_response.json()["access_token"]
     return access_token
 
 
 def check_camera_status(complex_ip: str, complex_port: str, camera_id: int, access_token: str) -> int:
     logger.info(
-        "Sending camera checking request to the address: " + CAMERA_CHECK_PROTOCOL + complex_ip + ":" + complex_port + "/stream/recognition/" + 
-            str(camera_id) + "/snapshot")
+        "Sending camera checking request to the address: " + CAMERA_CHECK_PROTOCOL + complex_ip + 
+        ":" + complex_port + "/stream/recognition/" + str(camera_id) + "/snapshot")
     camera_status = CameraStatus.BAD.value
     try:
-        resp = requests.get(CAMERA_CHECK_PROTOCOL + complex_ip + ":" + complex_port + "/stream/recognition/" + str(camera_id) + "/snapshot",
+        resp = requests.get(CAMERA_CHECK_PROTOCOL + complex_ip + ":" + complex_port + 
+                            "/stream/recognition/" + str(camera_id) + "/snapshot",
                         timeout=CAMERA_CHECK_TIMEOUT,
                         headers={"access-token": access_token, "Content-Type": "application/json"})
         logger.info("Camera check response: " + str(resp.status_code) + " : " + resp.text)

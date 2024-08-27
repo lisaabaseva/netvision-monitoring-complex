@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from controllers import camera_controller
+from routers import router
 
+from config import FASTAPI_VERSION, FASTAPI_TITLE
 
-app = FastAPI()
+app = FastAPI(version=FASTAPI_VERSION, title=FASTAPI_TITLE)
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,12 +15,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(camera_controller.router)
+app.include_router(router)
 
 
-@app.get("/health")
-async def root():
-    return {"message": "Sucksex"}
+# @app.get("/health")
+# async def root():
+#     return {"message": "Sucksex"}
 
 
 if __name__ == "__main__":

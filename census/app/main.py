@@ -10,10 +10,10 @@ from controllers import camera_controller, complex_controller, group_controller
 from model.complex import Complex
 from depends import get_camera_service, get_complex_service
 
-from typing import List
 
+from config import FASTAPI_VERSION, FASTAPI_TITLE
 
-app = FastAPI()
+app = FastAPI(version=FASTAPI_VERSION, title=FASTAPI_TITLE)
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,7 +29,7 @@ app.include_router(group_controller.router)
 
 
 def update_all_cameras():
-    complexes: List[Complex] = get_complex_service().get_complexes()
+    complexes: list[Complex] = get_complex_service().get_complexes()
     for complex in complexes:
         get_camera_service().update_cameras_states(complex.ip, complex.port, complex.login, complex.password, complex.uuid)
 

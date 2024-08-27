@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-# Здесь был CameraIn. Используется в overseer/app/service/complex.py
 class CameraDto(BaseModel):
     id: int
     description: str
@@ -10,3 +9,8 @@ class CameraDto(BaseModel):
     active: bool
     status: int
 
+
+class CameraStatusDto(BaseModel):
+    id: int
+    status: int
+    active: bool
