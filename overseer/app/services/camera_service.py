@@ -2,7 +2,7 @@ from typing import Any, List
 
 import requests, json
 
-from config import CAMERA_CHECK_PROTOCOL, CAMERA_CHECK_TIMEOUT
+from config import CAMERA_CHECK_PROTOCOL, CAMERA_CHECK_TIMEOUT, GET_CAMERAS_TIMEOUT
 from config.overseer_log_config import get_default_logger
 from shared.camera_status_codes import CameraStatus
 from exeption import UnavailableServer
@@ -57,7 +57,7 @@ def get_cameras_info(complex_ip: str, complex_port: str, login: str, password: s
 
     try:
         response = requests.get("http://" + complex_ip + ":" + complex_port + "/api/v1/cameras",
-                            timeout=CAMERA_CHECK_TIMEOUT,
+                            timeout=GET_CAMERAS_TIMEOUT,
                             headers={"access-token": access_token, "Content-Type": "application/json"})
 
         if response.status_code != 200:
@@ -101,7 +101,7 @@ def get_cameras_state(complex_ip: str, complex_port: str, login: str, password: 
 
     try:
         response = requests.get("http://" + complex_ip + ":" + complex_port + "/api/v1/cameras",
-                                timeout=CAMERA_CHECK_TIMEOUT,
+                                timeout=GET_CAMERAS_TIMEOUT,
                                 headers={"access-token": access_token, "Content-Type": "application/json"})
 
         if response.status_code != 200:
