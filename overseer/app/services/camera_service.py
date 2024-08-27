@@ -2,7 +2,7 @@ from typing import Any, List
 
 import requests, json
 
-from config import CAMERA_CHECK_PROTOCOL, CAMERA_CHECK_TIMEOUT, GET_CAMERAS_TIMEOUT
+from config import CAMERA_CHECK_PROTOCOL, CAMERA_CHECK_TIMEOUT, GET_CAMERAS_TIMEOUT, AUTHENTICATION_TIMEOUT
 from config.overseer_log_config import get_default_logger
 from shared.camera_status_codes import CameraStatus
 from exeption import UnavailableServer
@@ -14,7 +14,7 @@ def authentication(complex_ip: str, complex_port: str, login: str, password: str
 
     logger.info("Sending auth request to the address: " + "http://" + complex_ip + ":" + complex_port + "/api/v1/auth")
     auth_response = requests.post("http://" + complex_ip + ":" + complex_port + "/api/v1/auth",
-                                  timeout=3, data=json.dumps({"login": login, "password": password}),
+                                  timeout=AUTHENTICATION_TIMEOUT, data=json.dumps({"login": login, "password": password}),
                                   headers={"Content-Type": "application/json"})
     if auth_response.status_code != 200:
         raise UnavailableServer("Authentification error")

@@ -27,8 +27,9 @@ services:
     networks:
       - rest
     environment:
+      - AUTHENTICATION_TIMEOUT=10
       - CAMERA_CHECK_TIMEOUT=0.5
-      - GET_CAMERAS_TIMEOUT=1
+      - GET_CAMERAS_TIMEOUT=10
 
   web:
     container_name: web
