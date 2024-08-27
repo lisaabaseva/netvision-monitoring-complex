@@ -30,6 +30,20 @@ services:
       - CAMERA_CHECK_TIMEOUT=0.5
       - GET_CAMERAS_TIMEOUT=1
 
+  web:
+    container_name: web
+    build: 
+      context: frontend/
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - census
+    environment:
+      - CENSUS_URL=http://census:8000
+    networks:
+      - rest
+
   postgres:
     image: 'postgres:latest'
     command:
