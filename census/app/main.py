@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -7,8 +7,6 @@ from config.init_db import init_db
 from config.census_consts import CRON_INTERVAL, MAX_JOBS_INSTANCES
 
 from controllers import camera_controller, complex_controller, group_controller
-from services.camera_service import CameraService
-from services.complex_service import ComplexService
 from model.complex import Complex
 from depends import get_camera_service, get_complex_service
 
