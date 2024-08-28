@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from typing import List
 
 import uuid
 
@@ -14,8 +13,8 @@ from services.group_service import GroupService
 router = APIRouter(prefix="/groups")
 
 
-@router.get("/", response_model=List[GroupOut])
-async def get_all_groups(service: GroupService = Depends(get_group_service)) -> List[Group]:
+@router.get("/", response_model=list[GroupOut])
+async def get_all_groups(service: GroupService = Depends(get_group_service)) -> list[Group]:
     return service.get_groups()
 
 
@@ -24,6 +23,6 @@ async def create_group(group_create: GroupCreate, service: GroupService = Depend
     return service.create_group(group_create)
 
 
-@router.delete("/{group_id}")
+@router.delete("/{group_id}", response_model=bool)
 async def delete_group(group_id: uuid.UUID, service: GroupService = Depends(get_group_service)) -> bool:
     return service.delete_group_by_id(group_id)

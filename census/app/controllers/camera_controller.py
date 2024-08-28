@@ -1,10 +1,9 @@
 from fastapi import APIRouter, Depends
-from typing import List
 
 import uuid
 
 from depends import get_camera_service
-from dto.camera import CameraOut, CameraCreate, CameraStatesUpdate
+from dto.camera import CameraCreate, CameraOut
 from model import Camera
 from services.camera_service import CameraService
 
@@ -12,8 +11,8 @@ from services.camera_service import CameraService
 router = APIRouter(prefix="/cameras")
 
 
-@router.get("/", response_model=List[CameraOut])
-async def get_all_cameras(service: CameraService = Depends(get_camera_service)) -> List[Camera]:
+@router.get("/", response_model=list[CameraOut])
+async def get_all_cameras(service: CameraService = Depends(get_camera_service)) -> list[Camera]:
     return service.get_cameras()
 
 
@@ -27,6 +26,6 @@ async def create_camera(camera_create: CameraCreate, service: CameraService = De
     return service.create_camera(camera_create)
 
 
-@router.delete("/{camera_id}")
+@router.delete("/{camera_id}", response_model=bool)
 async def delete_camera(camera_id: uuid.UUID, service: CameraService = Depends(get_camera_service)) -> bool:
     return service.delete_camera_by_id(camera_id)

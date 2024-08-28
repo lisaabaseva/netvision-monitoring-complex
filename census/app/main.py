@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from gunicorn.app.base import BaseApplication
+import uvicorn
+
+import multiprocessing
+import os
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from config.init_db import init_db
@@ -41,15 +46,43 @@ scheduler.add_job(update_all_cameras, 'interval', seconds=CRON_INTERVAL)
 @app.on_event("startup")
 def on_startup():
     init_db()
+
+def number_of_workers():
+    return (multiprocessing.cpu_count() * 2) + 1
+
+
+class StandaloneApplication(BaseApplication):
+    def __init__(self, application: callable, options: dict[str, any] = None):
+        self.options = options or {}
+        self.application = application
+        super().__init__()
+
+    def load_config(self):
+        config = {
+            key: value
+            for key, value in self.options.items()
+            if key in self.cfg.settings and value is not None
+        }
+        for key, value in config.items():
+            self.cfg.set(key.lower(), value)
+
+    def load(self):
+        return self.application
+
     
 
 if __name__ == "__main__":
-    import uvicorn
     
     if scheduler.state == 0:
         pass
     scheduler.start()
-
-    uvicorn.run("main:app", reload=True, host="0.0.0.0", port=8000)
-
-
+    
+    if os.getenv("ENV") == "prod":
+        options = {
+            "bind": "%s:%s" % ("0.0.0.0", "8000"),
+            "workers": number_of_workers(),
+            "worker_class": "uvicorn.workers.UvicornWorker",
+        }
+        StandaloneApplication(app, options).run()
+    else:
+        uvicorn.run("main:app", reload=True, host="0.0.0.0", port=8000)

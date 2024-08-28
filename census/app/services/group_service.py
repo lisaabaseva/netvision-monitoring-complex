@@ -1,5 +1,4 @@
 import uuid
-from typing import List
 
 from repository import GroupRepository
 from dto.group import GroupCreate
@@ -10,7 +9,7 @@ class GroupService:
     def __init__(self, group_repository: GroupRepository):
         self.group_repository = group_repository
 
-    def get_groups(self) -> List[Group]:
+    def get_groups(self) -> list[Group]:
         return self.group_repository.get_groups()
 
     def create_group(self, group_create: GroupCreate) -> Group:

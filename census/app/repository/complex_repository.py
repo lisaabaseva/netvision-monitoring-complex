@@ -1,17 +1,14 @@
 import uuid
 
-from typing import List
-
 from sqlmodel import select
 from sqlmodel import Session
 
-from dto.complex import ComplexCreate
 from model import Complex
 from config.init_db import get_session
 
 
 class ComplexRepository:
-    def get_complexes(self) -> List[Complex]:
+    def get_complexes(self) -> list[Complex]:
         session: Session = next(get_session())
         result = session.scalars(select(Complex)).all()
         session.close()

@@ -1,10 +1,9 @@
 from fastapi import APIRouter, Depends
-from typing import List
 
 import uuid
 
 from depends import get_complex_service, get_camera_service
-from dto.complex import ComplexDetailedOut, ComplexCreate
+from dto.complex import ComplexCreate, ComplexOut
 from model import Complex
 from services.complex_service import ComplexService
 from services.camera_service import CameraService
@@ -12,17 +11,17 @@ from services.camera_service import CameraService
 router = APIRouter(prefix="/complexes")
 
 
-@router.get("/", response_model=List[ComplexDetailedOut])
-async def get_all_complexes(service: ComplexService = Depends(get_complex_service)) -> List[Complex]:
+@router.get("/", response_model=list[ComplexOut])
+async def get_all_complexes(service: ComplexService = Depends(get_complex_service)) -> list[Complex]:
     return service.get_complexes()
 
 
-@router.get("/{complex_id}", response_model=ComplexDetailedOut)
+@router.get("/{complex_id}", response_model=ComplexOut)
 async def get_complex(complex_id: uuid.UUID, service: ComplexService = Depends(get_complex_service)) -> Complex:
     return service.get_complex_by_id(complex_id)
 
 
-@router.post("/", response_model=ComplexCreate)
+@router.post("/", response_model=ComplexOut)
 async def create_complex(complex_create: ComplexCreate, service: ComplexService = Depends(get_complex_service),
                          camera_service: CameraService = Depends(get_camera_service)) -> Complex:
     created_complex = service.create_complex(complex_create)
@@ -32,6 +31,6 @@ async def create_complex(complex_create: ComplexCreate, service: ComplexService 
     return created_complex
 
 
-@router.delete("/{complex_id}")
+@router.delete("/{complex_id}", response_model=bool)
 async def delete_complex(complex_id: uuid.UUID, service: ComplexService = Depends(get_complex_service)) -> bool:
     return service.delete_complex_by_id(complex_id)
