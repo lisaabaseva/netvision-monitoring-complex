@@ -1,8 +1,5 @@
 import uuid
 
-from fastapi import Depends
-from typing import List
-
 from sqlmodel import select
 from sqlmodel import Session
 
@@ -12,7 +9,7 @@ from config.init_db import get_session
 
 
 class CameraRepository:
-    def get_cameras(self) -> List[Camera]:
+    def get_cameras(self) -> list[Camera]:
         session: Session = next(get_session())
         result = session.scalars(select(Camera)).all()
         session.close()
@@ -61,7 +58,7 @@ class CameraRepository:
         return True
 
 
-    def update_cameras_states(self, complex_uuid: uuid, updated_states: List[CameraStatesUpdate]) -> None:
+    def update_cameras_states(self, complex_uuid: uuid, updated_states: list[CameraStatesUpdate]) -> None:
         session: Session = next(get_session())
         for data in updated_states:
             camera = session.scalars(select(Camera).where(Camera.complex_uuid == complex_uuid).where(Camera.id == data["id"])).first()
@@ -74,7 +71,7 @@ class CameraRepository:
         session.close()
         
     
-    def get_cameras_id(self) -> List[int]:
+    def get_cameras_id(self) -> list[int]:
         session: Session = next(get_session())
         result = session.scalars(select(Camera)).all()
         session.close()

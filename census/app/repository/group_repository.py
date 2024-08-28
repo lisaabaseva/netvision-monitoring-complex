@@ -1,8 +1,5 @@
 import uuid
 
-from fastapi import Depends
-from typing import List
-
 from sqlmodel import select
 from sqlmodel import Session
 
@@ -12,13 +9,13 @@ from config.init_db import get_session
 
 
 class GroupRepository:
-    def get_groups(self) -> List[Group]:
+    def get_groups(self) -> list[Group]:
         session: Session = next(get_session())
         result = session.scalars(select(Group)).all()
         session.close()
         return [Group(uuid=group.uuid, name=group.name) for group in result]
 
-    def create_group(self, group_create: Group) -> Group:
+    def create_group(self, group_create: GroupCreate) -> Group:
         session: Session = next(get_session())
 
         session.add(group_create)

@@ -15,7 +15,6 @@ class Complex(Model):
     port: Optional[int] = Column(Integer, default=80)
     login: Optional[str] = Column(String, default="")
     password: Optional[str] = Column(String, default="")
-    version: Optional[str] = Column(String, default="")
     group_uuid: UUID = Column(UUID, ForeignKey("group.uuid"), nullable=False, index=True)
 
     cameras = relationship("Camera", back_populates="complex", cascade="delete")

@@ -17,7 +17,8 @@ services:
       - FASTAPI_VERSION=0.112.1
       - FASTAPI_TITLE=Census
       - FRONTEND_URL=http://frontend:3000
-  
+      - ENV=prod
+
   overseer:
     container_name: overseer-api
     build:

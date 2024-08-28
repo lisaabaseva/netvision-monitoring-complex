@@ -1,5 +1,4 @@
 import uuid
-from typing import List
 
 from repository.complex_repository import ComplexRepository
 from dto.complex import ComplexCreate
@@ -14,7 +13,7 @@ class ComplexService:
         self.logger = get_default_logger()
 
 
-    def get_complexes(self) -> List[Complex]:
+    def get_complexes(self) -> list[Complex]:
         return self.complex_repository.get_complexes()
 
 
@@ -39,8 +38,3 @@ class ComplexService:
 
     def delete_complex_by_id(self, complex_id: uuid.UUID) -> bool:
         return self.complex_repository.delete_complex_by_id(complex_id)
-
-
-# complex_url/api/v1/cameras - get cams - [ {"id": num, "url": str, "active": bool, "description": str} ]
-# complex_url/stream/recognition/cam_id/snapshot - TIMEOUT 10s
-# complex_url/api/v1/traffic-zones/version - { "version": "0.3.15" }

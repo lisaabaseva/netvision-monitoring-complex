@@ -1,10 +1,8 @@
 import uuid
-from typing import List
 import requests
 
 from config.census_consts import OVERSEER_URL
 from exceptions.unavailable_service import UnavailableService
-from services.complex_service import ComplexService
 from repository import CameraRepository
 from dto.camera import CameraStatesUpdate, CameraCreate
 from model import Camera
@@ -15,8 +13,8 @@ class CameraService:
         self.camera_repository = camera_repository
 
 
-    def get_cameras(self) -> List[Camera]:
-        return self.camera_repository.get_cameras_response()
+    def get_cameras(self) -> list[Camera]:
+        return self.camera_repository.get_cameras()
 
 
     def get_camera_by_id(self, camera_id: uuid.UUID) -> Camera:
@@ -50,9 +48,7 @@ class CameraService:
         if response.status_code != 200:
             raise UnavailableService("Couldn't get cameras states from overseer server")
         
-        # complex = self.complex_service.get_complex_by_ip(complex_ip)
-
-        cameras_states: List[CameraStatesUpdate] = response.json()
+        cameras_states: list[CameraStatesUpdate] = response.json()
         return self.camera_repository.update_cameras_states(complex_uuid, cameras_states)
     
     

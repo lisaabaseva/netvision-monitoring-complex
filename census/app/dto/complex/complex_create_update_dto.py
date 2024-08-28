@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-class ComplexDetailedOut(BaseModel):
+class ComplexOut(BaseModel):
     uuid: UUID
     name: str
     ip: str

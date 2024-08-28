@@ -30,3 +30,4 @@ sqlmodel
 pg8000
 apscheduler
 requests
+gunicorn
