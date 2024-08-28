@@ -4,24 +4,25 @@ from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from config.init_db import init_db
-from config.census_consts import CRON_INTERVAL, MAX_JOBS_INSTANCES
+from config import Config
 
 from controllers import camera_controller, complex_controller, group_controller
 from model.complex import Complex
 from depends import get_camera_service, get_complex_service
 
 
-from config import FASTAPI_VERSION, FASTAPI_TITLE
+app = FastAPI(version=Config.FASTAPI_VERSION, title=Config.FASTAPI_TITLE)
 
-app = FastAPI(version=FASTAPI_VERSION, title=FASTAPI_TITLE)
+origins = [Config.FRONTEND_URL]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[origins],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.include_router(camera_controller.router)
 app.include_router(complex_controller.router)
@@ -34,8 +35,8 @@ def update_all_cameras():
         get_camera_service().update_cameras_states(complex.ip, complex.port, complex.login, complex.password, complex.uuid)
 
 
-scheduler = BackgroundScheduler(job_defaults={'max_instances': MAX_JOBS_INSTANCES})
-scheduler.add_job(update_all_cameras, 'interval', seconds=CRON_INTERVAL)
+scheduler = BackgroundScheduler(job_defaults={'max_instances': Config.MAX_JOBS_INSTANCES})
+scheduler.add_job(update_all_cameras, 'interval', seconds=Config.CRON_INTERVAL)
 
 
 @app.on_event("startup")

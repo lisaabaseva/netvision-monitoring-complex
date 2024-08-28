@@ -16,6 +16,7 @@ services:
       - DATASOURCE_URL=postgresql+pg8000://postgres:postgres@postgres/census
       - FASTAPI_VERSION=0.112.1
       - FASTAPI_TITLE=Census
+      - FRONTEND_URL=http://frontend:3000
   
   overseer:
     container_name: overseer-api
@@ -31,6 +32,7 @@ services:
     environment:
       - AUTHENTICATION_TIMEOUT=10
       - CAMERA_CHECK_TIMEOUT=0.5
+      - CENSUS_URL=http://census:8000
       - GET_CAMERAS_TIMEOUT=10
       - FASTAPI_VERSION=0.112.1
       - FASTAPI_TITLE=Overseer

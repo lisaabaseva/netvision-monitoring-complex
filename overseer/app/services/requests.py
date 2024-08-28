@@ -2,7 +2,7 @@ from typing import Any
 import logging
 
 import requests, json
-from config import CAMERA_CHECK_PROTOCOL, CAMERA_CHECK_TIMEOUT, GET_CAMERAS_TIMEOUT, AUTHENTICATION_TIMEOUT
+from config import Config
 from shared.camera_status_codes import CameraStatus
 from exeption import UnavailableServer
 
@@ -12,7 +12,7 @@ logger = logging.getLogger('logger')
 def authentication(complex_ip: str, complex_port: str, login: str, password: str) -> Any:
     try:
         auth_response = requests.post("http://" + complex_ip + ":" + complex_port + "/api/v1/auth",
-                                      timeout=AUTHENTICATION_TIMEOUT,
+                                      timeout=Config.AUTHENTICATION_TIMEOUT,
                                       data=json.dumps({"login": login, "password": password}),
                                       headers={"Content-Type": "application/json"})
 
@@ -35,9 +35,9 @@ def check_camera_status(complex_ip: str, complex_port: str, camera_id: int, acce
     camera_status = CameraStatus.BAD.value
 
     try:
-        resp = requests.get(CAMERA_CHECK_PROTOCOL + complex_ip + ":" + complex_port +
+        resp = requests.get(Config.CAMERA_CHECK_PROTOCOL + complex_ip + ":" + complex_port +
                             "/stream/recognition/" + str(camera_id) + "/snapshot",
-                            timeout=CAMERA_CHECK_TIMEOUT,
+                            timeout=Config.CAMERA_CHECK_TIMEOUT,
                             headers={"access-token": access_token, "Content-Type": "application/json"})
         logger.info("Camera check response: " + str(resp.status_code) + " : " + resp.text)
 
@@ -55,7 +55,7 @@ def get_cameras_response(complex_ip: str, complex_port: str, access_token: str) 
     response = None
     try:
         response = requests.get("http://" + complex_ip + ":" + complex_port + "/api/v1/cameras",
-                                timeout=GET_CAMERAS_TIMEOUT,
+                                timeout=Config.GET_CAMERAS_TIMEOUT,
                                 headers={"access-token": access_token, "Content-Type": "application/json"})
 
         if response.status_code != 200:
