@@ -16,7 +16,7 @@ class CameraService:
 
 
     def get_cameras(self) -> List[Camera]:
-        return self.camera_repository.get_cameras()
+        return self.camera_repository.get_cameras_response()
 
 
     def get_camera_by_id(self, camera_id: uuid.UUID) -> Camera:

@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from fastapi import Depends
 from typing import List
 
 import uuid

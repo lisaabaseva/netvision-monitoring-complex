@@ -14,7 +14,7 @@ router = APIRouter(prefix="/cameras")
 
 @router.get("/", response_model=List[CameraOut])
 async def get_all_cameras(service: CameraService = Depends(get_camera_service)) -> List[Camera]:
-    return service.get_cameras()
+    return service.get_cameras_response()
 
 
 @router.get("/{camera_id}", response_model=CameraOut)

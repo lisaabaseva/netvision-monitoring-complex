@@ -17,12 +17,6 @@ app.add_middleware(
 
 app.include_router(router)
 
-
-# @app.get("/health")
-# async def root():
-#     return {"message": "Sucksex"}
-
-
 if __name__ == "__main__":
     import uvicorn
     
