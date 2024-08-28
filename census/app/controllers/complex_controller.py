@@ -25,8 +25,9 @@ async def get_complex(complex_id: uuid.UUID, service: ComplexService = Depends(g
 async def create_complex(complex_create: ComplexCreate, service: ComplexService = Depends(get_complex_service),
                          camera_service: CameraService = Depends(get_camera_service)) -> Complex:
     created_complex = service.create_complex(complex_create)
-    
-    camera_service.fill_camera_repository(created_complex.ip, created_complex.port, created_complex.login, created_complex.password, created_complex.uuid)
+
+    camera_service.fill_camera_repository(created_complex.ip, created_complex.port, created_complex.login,
+                                          created_complex.password, created_complex.uuid)
 
     return created_complex
 

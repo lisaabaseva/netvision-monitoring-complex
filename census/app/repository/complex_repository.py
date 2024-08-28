@@ -25,7 +25,7 @@ class ComplexRepository:
         result = session.get(Complex, complex_id)
         session.close()
         return result
-    
+
     def get_complex_by_ip(self, ip: str) -> Complex:
         session: Session = next(get_session())
         result = session.scalars(select(Complex).where(Complex.ip == ip))

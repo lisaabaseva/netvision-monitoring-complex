@@ -14,6 +14,7 @@ class Config(BaseSettings):
     MAX_JOBS_INSTANCES: int = int(os.environ.get("MAX_JOBS_INSTANCES") or 3)
     DATABASE_URL: str = os.environ.get("DATASOURCE_URL") or "postgresql+pg8000://postgres:123@localhost:5432/census"
     FRONTEND_URL: str = os.environ.get("FRONTEND_URL") or "http://localhost:3000"
+    SERVER: str = os.environ.get("SERVER") or "gunicorn"
 
     @cached_property
     def get_app_config(self) -> Any:
@@ -23,5 +24,6 @@ class Config(BaseSettings):
             "overseer_url": self.OVERSEER_URL,
             "cron_interval": self.CRON_INTERVAL,
             "max_jobs_instances": self.MAX_JOBS_INSTANCES,
-            "database_url": self.DATABASE_URL
+            "database_url": self.DATABASE_URL,
+            "server": self.SERVER
         }

@@ -17,7 +17,7 @@ services:
       - FASTAPI_VERSION=0.112.1
       - FASTAPI_TITLE=Census
       - FRONTEND_URL=http://frontend:3000
-      - ENV=prod
+      - SERVER=gunicorn
 
   overseer:
     container_name: overseer-api
@@ -37,6 +37,7 @@ services:
       - GET_CAMERAS_TIMEOUT=10
       - FASTAPI_VERSION=0.112.1
       - FASTAPI_TITLE=Overseer
+      - SERVER=gunicorn
 
   web:
     container_name: web

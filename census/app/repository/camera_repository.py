@@ -21,13 +21,11 @@ class CameraRepository:
                        status=camera.status,
                        complex_uuid=camera.complex_uuid) for camera in result]
 
-
     def get_camera_by_id(self, camera_id: uuid.UUID) -> Camera:
         session: Session = next(get_session())
         result = session.get(Camera, camera_id)
         session.close()
         return result
-
 
     def create_camera(self, camera_create: Camera, complex_uuid: uuid) -> Camera:
         session: Session = next(get_session())
@@ -44,7 +42,6 @@ class CameraRepository:
         session.close()
         return new_camera
 
-
     def delete_camera_by_id(self, camera_id: uuid.UUID) -> bool:
         session: Session = next(get_session())
         result = session.get(Camera, camera_id)
@@ -57,11 +54,11 @@ class CameraRepository:
         session.close()
         return True
 
-
     def update_cameras_states(self, complex_uuid: uuid, updated_states: list[CameraStatesUpdate]) -> None:
         session: Session = next(get_session())
         for data in updated_states:
-            camera = session.scalars(select(Camera).where(Camera.complex_uuid == complex_uuid).where(Camera.id == data["id"])).first()
+            camera = session.scalars(
+                select(Camera).where(Camera.complex_uuid == complex_uuid).where(Camera.id == data["id"])).first()
             if camera is None:
                 continue
 
@@ -69,8 +66,7 @@ class CameraRepository:
             camera.active = data["active"]
             session.commit()
         session.close()
-        
-    
+
     def get_cameras_id(self) -> list[int]:
         session: Session = next(get_session())
         result = session.scalars(select(Camera)).all()

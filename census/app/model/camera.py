@@ -3,10 +3,10 @@ from uuid import uuid4
 from typing import Optional
 from sqlalchemy import Column, Integer, String, ForeignKey, UUID, Boolean
 from sqlalchemy.orm import relationship
-from .models import Model
+from sqlalchemy.orm import DeclarativeBase
 
 
-class Camera(Model):
+class Camera(DeclarativeBase):
     __tablename__ = 'camera'
 
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)

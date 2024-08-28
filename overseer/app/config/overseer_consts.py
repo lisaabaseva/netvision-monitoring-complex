@@ -14,6 +14,7 @@ class Config(BaseSettings):
     AUTHENTICATION_TIMEOUT: float = float(os.environ.get("AUTHENTICATION_TIMEOUT") or 3)
     CAMERA_CHECK_TIMEOUT: float = float(os.environ.get("CAMERA_CHECK_TIMEOUT") or 1)
     GET_CAMERAS_TIMEOUT: float = float(os.environ.get("GET_CAMERAS_TIMEOUT") or 3)
+    SERVER: str = os.environ.get("SERVER") or "gunicorn"
 
     @cached_property
     def get_app_config(self) -> Any:
@@ -24,5 +25,6 @@ class Config(BaseSettings):
             "camera_check_protocol": self.CAMERA_CHECK_PROTOCOL,
             "authentication_timeout": self.AUTHENTICATION_TIMEOUT,
             "camera_check_timeout": self.CAMERA_CHECK_TIMEOUT,
-            "get_cameras_timeout": self.GET_CAMERAS_TIMEOUT
+            "get_cameras_timeout": self.GET_CAMERAS_TIMEOUT,
+            "server": self.SERVER
         }
