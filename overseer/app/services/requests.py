@@ -52,7 +52,7 @@ async def check_camera_status(session, complex_ip: str, complex_port: str, camer
     return camera_status
 
 
-async def get_cameras_response(session, complex_ip: str, complex_port: str, access_token: str) -> Any:
+async def get_cameras_response(session, complex_ip: str, complex_port: str, access_token: str) -> list:
     response = None
     try:
         async with session.get(f"http://{complex_ip}:{complex_port}/api/v1/cameras",
