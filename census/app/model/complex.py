@@ -3,10 +3,10 @@ from uuid import uuid4
 from typing import Optional
 from sqlalchemy import Column, Integer, String, ForeignKey, UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import DeclarativeBase
+from .base_class import BaseClass
 
 
-class Complex(DeclarativeBase):
+class Complex(BaseClass):
     __tablename__ = 'complex'
 
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)

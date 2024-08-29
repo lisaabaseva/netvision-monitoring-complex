@@ -4,18 +4,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from gunicorn.app.base import BaseApplication
 import multiprocessing
 import uvicorn
-import os
 
 from routers import router
 from config import Config
 
-app = FastAPI(version=Config.VERSION, title=Config.TITLE)
+config = Config()
 
-origins = [Config.CENSUS_URL]
+app = FastAPI(version=config.VERSION, title=config.TITLE)
+
+origins = [config.CENSUS_URL]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[origins],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -49,7 +50,7 @@ class StandaloneApplication(BaseApplication):
 
 if __name__ == "__main__":
 
-    if Config.SERVER == "gunicorn":
+    if config.SERVER == "gunicorn":
         options = {
             "bind": "%s:%s" % ("0.0.0.0", "8001"),
             "workers": number_of_workers(),

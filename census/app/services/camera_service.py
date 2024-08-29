@@ -1,12 +1,13 @@
 import uuid
 import requests
 
-from config.census_consts import OVERSEER_URL
+from config import Config
 from exceptions.unavailable_service import UnavailableService
 from repository import CameraRepository
 from dto.camera import CameraStatesUpdate, CameraCreate
 from model import Camera
 
+config = Config()
 
 class CameraService:
     def __init__(self, camera_repository: CameraRepository):
@@ -32,7 +33,7 @@ class CameraService:
 
     def update_cameras_states(self, complex_ip: str, complex_port: int, login: str, password: str,
                               complex_uuid: uuid) -> None:
-        url = OVERSEER_URL + "/info/states"
+        url = config.OVERSEER_URL + "/info/states"
         params = {
             "complex_ip": complex_ip,
             "complex_port": complex_port,
@@ -49,7 +50,7 @@ class CameraService:
 
     def fill_camera_repository(self, complex_ip: str, complex_port: str, login: str, password: str,
                                complex_uuid: uuid) -> None:
-        url = OVERSEER_URL + "/info/cameras"
+        url = config.OVERSEER_URL + "/info/cameras"
         params = {
             "complex_ip": complex_ip,
             "complex_port": complex_port,

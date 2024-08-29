@@ -2,10 +2,10 @@ from uuid import uuid4
 
 from sqlalchemy import Column, String, UUID
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import DeclarativeBase
+from .base_class import BaseClass
 
 
-class Group(DeclarativeBase):
+class Group(BaseClass):
     __tablename__ = 'group'
 
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)

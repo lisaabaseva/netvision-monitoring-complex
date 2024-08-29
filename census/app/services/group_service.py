@@ -1,8 +1,8 @@
 import uuid
 
-from census.app.repository import GroupRepository
-from census.app.dto.group import GroupCreate
-from census.app.model import Group
+from repository import GroupRepository
+from dto.group import GroupCreate
+from model import Group
 
 
 class GroupService:

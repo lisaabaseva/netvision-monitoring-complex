@@ -1,10 +1,12 @@
 from sqlmodel import create_engine, SQLModel, Session
 
-from model.models import Model
+from model import BaseClass
 from config import Config
 
-engine = create_engine(Config.DATABASE_URL, echo=True)
-Model.metadata.create_all(engine)
+config = Config()
+
+engine = create_engine(config.DATABASE_URL, echo=True)
+BaseClass.metadata.create_all(engine)
 
 
 def init_db():

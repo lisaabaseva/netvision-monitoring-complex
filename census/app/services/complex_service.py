@@ -4,13 +4,10 @@ from repository.complex_repository import ComplexRepository
 from dto.complex import ComplexCreate
 from model.complex import Complex
 
-from config.census_log_config import get_default_logger
-
 
 class ComplexService:
     def __init__(self, complex_repository: ComplexRepository):
         self.complex_repository = complex_repository
-        self.logger = get_default_logger()
 
     def get_complexes(self) -> list[Complex]:
         return self.complex_repository.get_complexes()

@@ -14,13 +14,15 @@ from controllers import camera_controller, complex_controller, group_controller
 from model.complex import Complex
 from depends import get_camera_service, get_complex_service
 
-app = FastAPI(version=Config.FASTAPI_VERSION, title=Config.FASTAPI_TITLE)
+config = Config()
 
-origins = [Config.FRONTEND_URL]
+app = FastAPI(version=config.VERSION, title=config.TITLE)
+
+origins = [config.FRONTEND_URL]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[origins],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,8 +40,8 @@ def update_all_cameras():
                                                    complex.uuid)
 
 
-scheduler = BackgroundScheduler(job_defaults={'max_instances': Config.MAX_JOBS_INSTANCES})
-scheduler.add_job(update_all_cameras, 'interval', seconds=Config.CRON_INTERVAL)
+scheduler = BackgroundScheduler(job_defaults={'max_instances': config.MAX_JOBS_INSTANCES})
+scheduler.add_job(update_all_cameras, 'interval', seconds=config.CRON_INTERVAL)
 
 
 @app.on_event("startup")
@@ -76,7 +78,7 @@ if __name__ == "__main__":
         pass
     scheduler.start()
 
-    if Config.SERVER == "gunicorn":
+    if config.SERVER == "gunicorn":
         options = {
             "bind": "%s:%s" % ("0.0.0.0", "8000"),
             "workers": number_of_workers(),

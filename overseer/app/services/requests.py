@@ -1,30 +1,31 @@
 from typing import Any
 import logging
 
-import requests
 import orjson
+from aiohttp import ClientError
 from config import Config
 from shared.camera_status_codes import CameraStatus
 from exeption import UnavailableServer
 
 logger = logging.getLogger('logger')
+config = Config()
 
 
 async def authentication(session, complex_ip: str, complex_port: str, login: str, password: str) -> Any:
     try:
         async with session.post(f"http://{complex_ip}:{complex_port}/api/v1/auth",
-                                timeout=Config.AUTHENTICATION_TIMEOUT,
+                                timeout=config.AUTHENTICATION_TIMEOUT,
                                 data=orjson.dumps({"login": login, "password": password}),
                                 headers={"Content-Type": "application/json"}) as response:
-            if await response.status != 200:
+            if response.status != 200:
                 raise UnavailableServer("Authentication error")
 
-            auth_response = await response.json()
-            return auth_response["access_token"]
+            auth_response: dict = await response.json()
+            return auth_response.get("access_token")
 
     except UnavailableServer as e:
         logger.warning(f"Failed to retrieve access_token: {str(e)}")
-    except requests.RequestException as e:
+    except ClientError as e:
         logger.warning(f"Couldn't connect to the url: http://{complex_ip}:{complex_port}/api/v1/auth")
         logger.warning(f"The error message: {str(e)}")
     except Exception as e:
@@ -38,12 +39,11 @@ async def check_camera_status(session, complex_ip: str, complex_port: str, camer
 
     try:
         async with session.get(
-                f"{Config.CAMERA_CHECK_PROTOCOL}{complex_ip}:{complex_port}/stream/recognition/{camera_id}/snapshot",
-                timeout=Config.CAMERA_CHECK_TIMEOUT,
+                f"{config.CAMERA_CHECK_PROTOCOL}{complex_ip}:{complex_port}/stream/recognition/{camera_id}/snapshot",
+                timeout=config.CAMERA_CHECK_TIMEOUT,
                 headers={"access-token": access_token, "Content-Type": "application/json"}) as response:
 
-            response_status = await response.status
-            if response_status == 200:
+            if response.status == 200:
                 camera_status = CameraStatus.OK.value
 
     except Exception as e:
@@ -56,7 +56,7 @@ async def get_cameras_response(session, complex_ip: str, complex_port: str, acce
     response = None
     try:
         async with session.get(f"http://{complex_ip}:{complex_port}/api/v1/cameras",
-                               timeout=Config.GET_CAMERAS_TIMEOUT,
+                               timeout=config.GET_CAMERAS_TIMEOUT,
                                headers={"access-token": access_token, "Content-Type": "application/json"}) as response:
 
             if response.status != 200:
@@ -66,7 +66,7 @@ async def get_cameras_response(session, complex_ip: str, complex_port: str, acce
 
     except UnavailableServer as e:
         logger.warning(f"Couldn't send camera list request to the census server: {str(e)}")
-    except requests.RequestException as e:
+    except ClientError as e:
         logger.warning(f"Couldn't connect to the url: http://{complex_ip}:{complex_port}/api/v1/cameras")
         logger.warning(f"The error message: {str(e)}")
     except Exception as e:

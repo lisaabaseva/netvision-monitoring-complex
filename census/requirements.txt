@@ -31,3 +31,4 @@ pg8000
 apscheduler
 requests
 gunicorn
+pydantic_settings

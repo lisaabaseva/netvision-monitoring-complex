@@ -25,7 +25,7 @@ async def get_cameras_info(complex_ip: str, complex_port: str, login: str, passw
             logger.warning(f"Couldn't authorize using this url: http://{complex_ip}/api/v1/auth")
             return []
 
-        response = await get_cameras_response(complex_ip, complex_port, access_token)
+        response = await get_cameras_response(session, complex_ip, complex_port, access_token)
 
         for camera in response:
             camera_info = {"id": camera["id"],
