@@ -9,6 +9,7 @@ from model import Camera
 
 config = Config()
 
+
 class CameraService:
     def __init__(self, camera_repository: CameraRepository):
         self.camera_repository = camera_repository
