@@ -3,6 +3,7 @@ from uuid import UUID
 
 
 class ComplexOut(BaseModel):
+    """Класс ComplexOut - это DTO для полученных данных из БД для отправки UI."""
     uuid: UUID
     name: str
     ip: str

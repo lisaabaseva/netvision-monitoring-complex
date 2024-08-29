@@ -12,6 +12,7 @@ config = Config()
 
 
 async def authentication(session, complex_ip: str, complex_port: str, login: str, password: str) -> Any:
+    """Функция для авторизации и получения access_token."""
     try:
         async with session.post(f"http://{complex_ip}:{complex_port}/api/v1/auth",
                                 timeout=config.AUTHENTICATION_TIMEOUT,
@@ -35,6 +36,7 @@ async def authentication(session, complex_ip: str, complex_port: str, login: str
 
 
 async def check_camera_status(session, complex_ip: str, complex_port: str, camera_id: int, access_token: str) -> int:
+    """Функция для получения статуса камеры."""
     camera_status = CameraStatus.BAD.value
 
     try:
@@ -53,6 +55,7 @@ async def check_camera_status(session, complex_ip: str, complex_port: str, camer
 
 
 async def get_cameras_response(session, complex_ip: str, complex_port: str, access_token: str) -> Any:
+    """Функция для запроса информации обо всех камерах в комплексе."""
     response = None
     try:
         async with session.get(f"http://{complex_ip}:{complex_port}/api/v1/cameras",

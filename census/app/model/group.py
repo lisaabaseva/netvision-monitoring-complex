@@ -6,6 +6,10 @@ from .base_class import BaseClass
 
 
 class Group(BaseClass):
+    """Класс Group описывает модель комплекса для создания таблицы в БД.
+    Имеет ограничение названия группы.
+    """
+
     __tablename__ = 'group'
 
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)

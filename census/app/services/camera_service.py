@@ -11,16 +11,20 @@ config = Config()
 
 
 class CameraService:
+    """Класс CameraService предоставляет набор методов для взаимодействия с моделью камеры и репозиторием."""
     def __init__(self, camera_repository: CameraRepository):
         self.camera_repository = camera_repository
 
     def get_cameras(self) -> list[Camera]:
+        """Возвращает список всех камер в БД."""
         return self.camera_repository.get_cameras()
 
     def get_camera_by_id(self, camera_id: uuid.UUID) -> Camera:
+        """Возвращает из БД камеру по ее id."""
         return self.camera_repository.get_camera_by_id(camera_id)
 
     def create_camera(self, camera_create: CameraCreate) -> Camera:
+        """Создает новую камеру в БД."""
         new_camera: Camera = Camera(description=camera_create.description,
                                     id=camera_create.id,
                                     url=camera_create.url,
@@ -30,10 +34,15 @@ class CameraService:
         return self.camera_repository.create_camera(new_camera)
 
     def delete_camera_by_id(self, camera_id: uuid.UUID) -> bool:
+        """Удаляет из БД камеру по ее id."""
         return self.camera_repository.delete_camera_by_id(camera_id)
 
-    def update_cameras_states(self, complex_ip: str, complex_port: int, login: str, password: str,
+    def update_cameras_states(self,
+                              complex_ip: str,
+                              complex_port: int,
+                              login: str, password: str,
                               complex_uuid: uuid) -> None:
+        """Изменяет состояние камеры в БД."""
         url = config.OVERSEER_URL + "/info/states"
         params = {
             "complex_ip": complex_ip,
@@ -49,8 +58,12 @@ class CameraService:
         cameras_states: list[CameraStatesUpdate] = response.json()
         return self.camera_repository.update_cameras_states(complex_uuid, cameras_states)
 
-    def fill_camera_repository(self, complex_ip: str, complex_port: str, login: str, password: str,
+    def fill_camera_repository(self,
+                               complex_ip: str,
+                               complex_port: str,
+                               login: str, password: str,
                                complex_uuid: uuid) -> None:
+        """Заполняет БД камерами из комплекса."""
         url = config.OVERSEER_URL + "/info/cameras"
         params = {
             "complex_ip": complex_ip,

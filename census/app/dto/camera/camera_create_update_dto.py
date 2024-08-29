@@ -3,6 +3,7 @@ from uuid import UUID
 
 
 class CameraOut(BaseModel):
+    """Класс CameraOut - это DTO для полученных данных от overseer."""
     uuid: UUID
     description: str
     id: int

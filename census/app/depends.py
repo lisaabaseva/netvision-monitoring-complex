@@ -3,6 +3,8 @@ from services.complex_service import ComplexService
 from services.group_service import GroupService
 from repository import GroupRepository, ComplexRepository, CameraRepository
 
+"""Этот модуль предоставляет набор функций для создания экземпляров различных классов сервисов"""
+
 groupRepository: GroupRepository = GroupRepository()
 complexRepository: ComplexRepository = ComplexRepository()
 cameraRepository: CameraRepository = CameraRepository()

@@ -3,6 +3,7 @@ from uuid import UUID
 
 
 class ComplexCreate(BaseModel):
+    """Класс ComplexCreate - это DTO для создания нового комплекса в группе."""
     name: str
     ip: str
     port: int

@@ -11,6 +11,9 @@ logger = logging.getLogger('logger')
 
 
 class Camera(BaseClass):
+    """Класс Camera описывает модель камеры для создания таблицы в БД.
+    Имеет валидацию ip.
+    """
     __tablename__ = 'camera'
 
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)

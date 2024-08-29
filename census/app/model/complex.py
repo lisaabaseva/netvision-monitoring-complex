@@ -10,6 +10,10 @@ logger = logging.getLogger('logger')
 
 
 class Complex(BaseClass):
+    """Класс Complex описывает модель комплекса для создания таблицы в БД.
+    Имеет валидацию ip, ограничение названия комплекса, логина и пароля.
+    """
+
     __tablename__ = 'complex'
 
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)

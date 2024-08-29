@@ -9,7 +9,9 @@ from config.init_db import get_session
 
 
 class CameraRepository:
+    """Класс CameraRepository предоставляет набор методов для взаимодействия с моделью камеры в базе данных."""
     def get_cameras(self) -> list[Camera]:
+        """Возвращает список всех камер в БД."""
         session: Session = next(get_session())
         result = session.scalars(select(Camera)).all()
         session.close()
@@ -22,12 +24,14 @@ class CameraRepository:
                        complex_uuid=camera.complex_uuid) for camera in result]
 
     def get_camera_by_id(self, camera_id: uuid.UUID) -> Camera:
+        """Возвращает из БД камеру по ее id."""
         session: Session = next(get_session())
         result = session.get(Camera, camera_id)
         session.close()
         return result
 
     def create_camera(self, camera_create: Camera, complex_uuid: uuid) -> Camera:
+        """Создает новую камеру в БД."""
         session: Session = next(get_session())
         new_camera = Camera(description=camera_create["description"],
                             url=camera_create["url"],
@@ -43,6 +47,7 @@ class CameraRepository:
         return new_camera
 
     def delete_camera_by_id(self, camera_id: uuid.UUID) -> bool:
+        """Удаляет из БД камеру по ее id."""
         session: Session = next(get_session())
         result = session.get(Camera, camera_id)
 
@@ -55,6 +60,7 @@ class CameraRepository:
         return True
 
     def update_cameras_states(self, complex_uuid: uuid, updated_states: list[CameraStatesUpdate]) -> None:
+        """Изменяет состояние камеры в БД."""
         session: Session = next(get_session())
         for data in updated_states:
             camera = session.scalars(
@@ -68,6 +74,7 @@ class CameraRepository:
         session.close()
 
     def get_cameras_id(self) -> list[int]:
+        """Возвращает список id всех камер."""
         session: Session = next(get_session())
         result = session.scalars(select(Camera)).all()
         session.close()

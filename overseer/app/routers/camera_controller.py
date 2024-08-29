@@ -11,6 +11,7 @@ async def get_cameras_info_controller(complex_ip: str,
                                       complex_port: str,
                                       login: str,
                                       password: str) -> list[CameraDto]:
+    """Возвращает всю информацию о камерах в комплексе."""
     return await get_cameras_info(complex_ip, complex_port, login, password)
 
 
@@ -19,4 +20,5 @@ async def get_cameras_state_controller(complex_ip: str,
                                        complex_port: str,
                                        login: str,
                                        password: str) -> list[CameraStatusDto]:
+    """Возвращает информацию о состоянии камер."""
     return await get_cameras_state(complex_ip, complex_port, login, password)

@@ -7,6 +7,10 @@ from functools import cached_property
 
 
 class Config(BaseSettings):
+    """Класс Config Класс Config - это класс настроек, который наследуется от BaseSettings из pydantic_settings.
+    Он предоставляет возможность конфигурировать приложение с помощью различных параметров.
+    """
+
     TITLE: str = os.environ.get("FASTAPI_TITLE") or "OVERSEER"
     VERSION: str = os.environ.get("FASTAPI_VERSION") or "0.0.1"
     CENSUS_URL: str = os.environ.get("CENSUS_URL") or "http://localhost:8000"
