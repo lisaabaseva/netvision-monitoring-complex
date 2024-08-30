@@ -6,6 +6,16 @@ from typing import Any
 from functools import cached_property
 
 
+class DataBaseConfig():
+    DRIVERNAME: str = os.environ.get("DRIVERNAME")
+    DB_PORT: int = os.environ.get("DB_PORT")
+    DB_USERNAME: str = os.environ.get("DB_USERNAME")
+    DB_PASSWORD: str = os.environ.get("DB_PASSWORD")
+    DB_HOST: str = os.environ.get("DB_HOST")
+    DB_NAME: str = os.environ.get("DB_NAME")
+    APPLICATION_NAME: str = os.environ.get("APPLICATION_NAME")
+
+
 class Config(BaseSettings):
     """Класс Config Класс Config - это класс настроек, который наследуется от BaseSettings из pydantic_settings.
     Он предоставляет возможность конфигурировать приложение с помощью различных параметров.
@@ -16,7 +26,8 @@ class Config(BaseSettings):
     OVERSEER_URL: str = os.environ.get("OVERSEER_URL") or "http://localhost:8001"
     CRON_INTERVAL: int = int(os.environ.get("CRON_INTERVAL") or 5)
     MAX_JOBS_INSTANCES: int = int(os.environ.get("MAX_JOBS_INSTANCES") or 3)
-    DATABASE_URL: str = os.environ.get("DATASOURCE_URL") or "postgresql+pg8000://postgres:123@localhost:5432/census"
+    # DATABASE_URL: str = os.environ.get("DATASOURCE_URL") or "postgresql+pg8000://postgres:123@localhost:5432/census"
+    DATABASE_CONFIG: DataBaseConfig = DataBaseConfig()
     FRONTEND_URL: str = os.environ.get("FRONTEND_URL") or "http://localhost:3000"
     SERVER: str = os.environ.get("SERVER") or "gunicorn"
 

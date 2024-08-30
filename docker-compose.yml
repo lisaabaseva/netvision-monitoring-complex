@@ -14,6 +14,13 @@ services:
       - CRON_INTERVAL=5
       - OVERSEER_URL=http://overseer:8001
       - DATASOURCE_URL=postgresql+pg8000://postgres:postgres@postgres/census
+      - DRIVERNAME=postgresql+pg8000
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=postgres
+      - DB_NAME=census
+      - APPLICATION_NAME=netvision
       - FASTAPI_VERSION=0.112.1
       - FASTAPI_TITLE=Census
       - FRONTEND_URL=http://web:3000

@@ -54,7 +54,7 @@ async def check_camera_status(session, complex_ip: str, complex_port: str, camer
     return camera_status
 
 
-async def get_cameras_response(session, complex_ip: str, complex_port: str, access_token: str) -> Any:
+async def get_cameras_response(session, complex_ip: str, complex_port: str, access_token: str) -> list:
     """Функция для запроса информации обо всех камерах в комплексе."""
     response = None
     try:
